@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd         
+                           http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <bean id="swaggerResourceJSON" class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
+    <bean id="swaggerResourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
+    <bean id="swaggerApiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+    <bean id="swaggerConfig" class="com.wordnik.swagger.jaxrs.config.BeanConfig">
+        <!-- would need different resourcePackages here... sample.endpoint1, sample.endpoint2 -->
+        <property name="resourcePackage" value="sample" />
+        <property name="basePath" value="http://localhost:8080/api" />
+        <property name="scan" value="true" />
+    </bean>
+
+    <jaxrs:server id="endpoint1" address="/endpoint1">
+        <jaxrs:serviceBeans>
+            <bean class="sample.endpoint1.Endpoint1Resource" />
+            <ref bean="swaggerResourceJSON" />
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="swaggerResourceWriter" />
+            <ref bean="swaggerApiWriter" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <jaxrs:server id="endpoint2" address="/endpoint2">
+        <jaxrs:serviceBeans>
+            <bean class="sample.endpoint2.Endpoint2Resource" />
+            <ref bean="swaggerResourceJSON" />
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="swaggerResourceWriter" />
+            <ref bean="swaggerApiWriter" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+</beans>

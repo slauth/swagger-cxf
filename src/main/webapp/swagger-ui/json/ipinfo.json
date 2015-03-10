@@ -1,0 +1,162 @@
+{
+  "apiVersion" : "2.0",
+  "swaggerVersion" : "1.2",
+  "basePath" : "http://localhost:8082/selfbooking/api/v2",
+  "resourcePath" : "/ipinfo",
+  "produces" : [ "application/json" ],
+  "apis" : [ {
+    "path" : "/ipinfo",
+    "operations" : [ {
+      "method" : "GET",
+      "summary" : "Provides information about a specific IPv4 address",
+      "notes" : "",
+      "type" : "IpInfo",
+      "nickname" : "getIpInfo",
+      "parameters" : [ {
+        "name" : "ip",
+        "description" : "A valid IPv4 address",
+        "required" : true,
+        "type" : "string",
+        "paramType" : "query",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 200,
+        "message" : "The specified IP address was successfully mapped to an IP range",
+        "responseModel" : "IpInfo"
+      }, {
+        "code" : 400,
+        "message" : "Query parameter 'ip' was missing or is not a valid IPv4 address",
+        "responseModel" : "ErrorMessage"
+      }, {
+        "code" : 404,
+        "message" : "No IP range could be found matching the specified IPv4 address",
+        "responseModel" : "ErrorMessage"
+      } ]
+    }, {
+      "method" : "PUT",
+      "summary" : "Adds or updates IP ranges",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "updateIpInfos",
+      "consumes" : [ "application/json" ],
+      "parameters" : [ {
+        "name" : "body",
+        "description" : "A list of IP ranges",
+        "required" : true,
+        "type" : "array",
+        "items" : {
+          "$ref" : "IpInfo"
+        },
+        "paramType" : "body",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 204,
+        "message" : "The given IP ranges were added or updated successfully"
+      }, {
+        "code" : 400,
+        "message" : "At least one entry had no ID set, or a database constraint was violated",
+        "responseModel" : "ErrorMessage"
+      } ]
+    } ]
+  }, {
+    "path" : "/ipinfo/{id}",
+    "operations" : [ {
+      "method" : "DELETE",
+      "summary" : "Deletes a single IP range by ID",
+      "notes" : "",
+      "type" : "void",
+      "nickname" : "deleteIpInfo",
+      "parameters" : [ {
+        "name" : "id",
+        "description" : "The ID of the IP range to delete",
+        "required" : true,
+        "type" : "integer",
+        "format" : "int64",
+        "paramType" : "path",
+        "allowMultiple" : false
+      } ],
+      "responseMessages" : [ {
+        "code" : 204,
+        "message" : "The given IP range was deleted successfully"
+      }, {
+        "code" : 404,
+        "message" : "No IP range could be found with the given ID",
+        "responseModel" : "ErrorMessage"
+      } ]
+    } ]
+  } ],
+  "models" : {
+    "IpInfo" : {
+      "id" : "IpInfo",
+      "description" : "",
+      "required" : [ "id", "ipStart", "ipEnd", "ipStartNumber", "ipEndNumber", "ispName" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Unique ID of the range"
+        },
+        "ipStart" : {
+          "type" : "string",
+          "description" : "First IP address of the range in textual representation"
+        },
+        "ipEnd" : {
+          "type" : "string",
+          "description" : "Last IP address of the range in textual representation"
+        },
+        "ipStartNumber" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "First IP address of the range in numeric representation"
+        },
+        "ipEndNumber" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Last IP address of the range in numeric representation"
+        },
+        "country" : {
+          "type" : "string",
+          "description" : "Two-digit country code conforming to ISO 3166-2"
+        },
+        "ispName" : {
+          "type" : "string",
+          "description" : "The name of the Internet Service Provider (ISP) owning this range"
+        },
+        "organizationName" : {
+          "type" : "string",
+          "description" : "The name of the organization owning this range"
+        }
+      }
+    },
+    "ErrorMessage" : {
+      "id" : "ErrorMessage",
+      "description" : "",
+      "properties" : {
+        "status" : {
+          "$ref" : "Status"
+        }
+      }
+    },
+    "Status" : {
+      "id" : "Status",
+      "description" : "",
+      "properties" : {
+        "code" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "userMessage" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
